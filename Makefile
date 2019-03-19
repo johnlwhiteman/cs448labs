@@ -1,13 +1,25 @@
 .PHONY: clean
 
-simplestack: simplestack.c
-	gcc -fno-pie -fno-stack-protector -z execstack $< -o $@ 
+naive: naive.c
+	gcc -O0 -fno-pie -fno-stack-protector -z execstack $< -o $@ 
+
+func: func.c
+	gcc -O0 -fno-pie -fno-stack-protector -z execstack $< -o $@ 
 
 aslr: aslr.c
-	gcc -fPIE -fno-stack-protector -z execstack -g $< -o $@ 
+	gcc -O0 -fPIE -fno-stack-protector -z execstack -g $< -o $@ 
+
+notsonaive: notsonaive.c
+	gcc -O0 -fno-pie -fno-stack-protector -z execstack $< -o $@ 
 
 shellcode: shellcode.c
-	gcc -fno-stack-protector -z execstack $< -o $@ 
+	gcc -O0 -fno-stack-protector -z execstack $< -o $@ 
+
+simplestack: simplestack.c
+	gcc -O0 -fno-pie -fno-stack-protector -z execstack $< -o $@ 
+
+testshellcode: testshellcode.c
+	gcc -O0 -fno-pie -fno-stack-protector -z execstack $< -o $@ 
 
 clean: 
-	rm -f aslr shellcode simplestack
+	rm -f aslr func naive notsonaive shellcode simplestack testshellcode
