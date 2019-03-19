@@ -2,7 +2,7 @@
 #include <string.h>
 
 void func(char *str) {
-    char buf[13];
+    char buf[100];
     strcpy(buf, str);
     printf("%s\n", buf);
 }
