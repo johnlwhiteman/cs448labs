@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+dhclient >/dev/null 2>&1
+mkdir -p ./TMP
+mv -f /var/www/html/* ./TMP/ >/dev/null 2>&1
+cp ./signme ./*.sig ./*.asc  /var/www/html/
+sudo systemctl restart apache2

@@ -15,6 +15,9 @@ notsonaive: notsonaive.c
 shellcode: shellcode.c
 	gcc -O0 -fno-stack-protector -z execstack $< -o $@ 
 
+signme: signme.c 
+	gcc -O0 -fno-stack-protector -z execstack $< -o $@ 
+
 simplestack: simplestack.c
 	gcc -O0 -fno-pie -fno-stack-protector -z execstack $< -o $@ 
 
@@ -22,4 +25,5 @@ testshellcode: testshellcode.c
 	gcc -O0 -fno-pie -fno-stack-protector -z execstack $< -o $@ 
 
 clean: 
-	rm -f aslr func naive notsonaive shellcode simplestack testshellcode
+	rm -f aslr func naive notsonaive shellcode simplestack \
+          signme testshellcode *.asc *.sig
