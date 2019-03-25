@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#sudo apt-get update
+#sudo apt-get install npm -y
+sudo docker pull bkimminich/juice-shop
