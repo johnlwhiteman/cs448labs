@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-in-ubuntu-16-04
+# sudo nano /etc/php/7.0/fpm/php.ini
+
+function backupFileAsRoot {
+    if [ ! -f $1.ORIGINAL ]; then
+        sudo cp $1 $1.ORIGINAL
+    fi
+}
+
+function restoreFileAsRoot {
+    if [ -f $1.ORIGINAL ]; then
+        sudo cp $1.ORIGINAL $1
+    fi
+}
+
+function installMySql {
+    sudo apt-get install mysql-server -y
+}
+
+function installNginx {
+    #sudo apt-get install nginx -y
+    backupFileAsRoot "/etc/nginx/sites-available/default"
+    bash -c "cat << 'EOL' > /tmp/default
+server {
+        listen 80;
+        root /var/www/html;
+        index index.php index.html index.htm index.nginx-debian.html;
+        server_name 127.0.0.1;
+
+        location / {
+                try_files \$uri \$uri/ =404;
+        }
+
+        location ~ \.php\$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+}
+EOL"
+#    backupFileAsRoot "/etc/nginx/sites-enabled/default"
+}
+
+function installPhp {
+    sudo apt-get install php7.2-fpm php-mysql -y
+    sudo systemctl enable php7.2-fpm
+    sudo systemctl restart php7.2-fpm
+}
+
+
+sudo ls > /dev/null
+#installNginx
+#installMySql
+installPhp
