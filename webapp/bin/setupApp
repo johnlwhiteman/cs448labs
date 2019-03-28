@@ -86,6 +86,10 @@ function installPhp {
     sudo mv $tmp $phpIni
 }
 
+function installZap {
+    sudo docker pull owasp/zap2docker-stable
+}
+
 function copyWebContent {
 	cp ../html/* /var/www/html/
 }
@@ -96,4 +100,5 @@ installChrome
 installNginx
 installMySql
 installPhp
+#installZap
 copyWebContent
