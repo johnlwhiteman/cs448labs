@@ -86,9 +86,14 @@ function installPhp {
     sudo mv $tmp $phpIni
 }
 
+function copyWebContent {
+	cp ../html/* /var/www/html/
+}
+
 sudo ls > /dev/null
 installDeps
 installChrome
 installNginx
 installMySql
 installPhp
+copyWebContent
