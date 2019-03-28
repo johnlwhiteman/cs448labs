@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-in-ubuntu-16-04
-# sudo nano /etc/php/7.0/fpm/php.ini
 
 function backupFileAsRoot {
     if [ ! -f "$1" ]; then
@@ -17,8 +15,21 @@ function restoreFileAsRoot {
     fi
 }
 
+function installChrome {
+	wget -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb 
+	sudo dpkg -i /tmp/google-chrome.deb
+	rm -f /tmp/google-chrome.deb
+}
+
+function installDeps {
+	sudo apt-get install git -y
+}
+
 function installMySql {
     sudo apt-get install mysql-server -y
+	sudo systemctl enable mysql
+	sudo systemctl restart mysql
+    sudo systemctl status mysql --no-pager
 }
 
 function installNginx {
@@ -48,29 +59,29 @@ server {
 EOL"
     sudo systemctl stop nginx
     backupFileAsRoot "/etc/nginx/sites-enabled/default"
-    backupFileAsRoot "/var/www/html/index.nginx-debian.html"
+	sudo rm -f "/var/www/html/index.nginx-debian.html"
     sudo mv /tmp/cs448lab /etc/nginx/sites-available/
-    return
-    #sudo chown root:root /etc/nginx/sites-available/cs448lab
-    sudo rm -f /etc/nginx/sites-available/default
-    sudo rm -f /etc/nginx/sites-available/default
-    sudo rm -f /etc/nginx/sites-enabled/cs448lab
-    sudo ln /etc/nginx/sites-available/cs448lab /etc/nginx/sites-enabled/cs448lab    
-    #sudo chown root:root /etc/nginx/sites-enabled/cs448lab
-    nginx -t
-    #sudo systemctl start nginx
-    #sudo systemctl status nginx --no-pager
-    #sudo setfacl -m u:$(whoami):rwx /var/www/html
+	sudo chown root:root /etc/nginx/sites-available/cs448lab
+	sudo rm -f /etc/nginx/sites-enabled/default 
+    sudo ln /etc/nginx/sites-available/cs448lab /etc/nginx/sites-enabled/default
+    sudo chown root:root /etc/nginx/sites-enabled/default
+    sudo nginx -t
+    sudo systemctl start nginx
+    sudo systemctl status nginx --no-pager
+    sudo setfacl -m u:$(whoami):rwx /var/www/html
+	return
 }
 
 function installPhp {
     sudo apt-get install php7.2-fpm php-mysql -y
     sudo systemctl enable php7.2-fpm
     sudo systemctl restart php7.2-fpm
+    sudo systemctl status php7.2-fpm --no-pager
 }
 
-
 sudo ls > /dev/null
+installDeps
+installChrome
 installNginx
-#installMySql
-#installPhp
+installMySql
+installPhp
