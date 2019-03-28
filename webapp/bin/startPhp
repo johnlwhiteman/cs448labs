@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+sudo systemctl restart php7.2-fpm

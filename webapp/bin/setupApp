@@ -36,25 +36,27 @@ function installNginx {
     sudo apt-get install nginx -y
     sudo systemctl enable nginx
     backupFileAsRoot "/etc/nginx/sites-available/default"
+	export ip1=$(hostname -I | awk '{print $1}')
+	export ip2=$(hostname -I | awk '{print $2}')
     bash -c "cat << 'EOL' > /tmp/cs448lab
 server {
-        listen 80;
-        root /var/www/html;
-        index index.php index.html index.htm index.nginx-debian.html;
-        server_name 127.0.0.1;
+	listen 80;
+    listen [::]:80;
+	root /var/www/html;
+	index index.php index.html;
+	server_name localhost 127.0.0.1 ${ip1} ${ip2};
 
-        location / {
-                try_files \$uri \$uri/ =404;
-        }
+	location ~ \.php\$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)\$;
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        include fastcgi_params;
+	}
 
-        location ~ \.php\$ {
-                include snippets/fastcgi-php.conf;
-                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
-        }
-
-        location ~ /\.ht {
-                deny all;
-        }
+	location ~ /\.ht {
+		deny all;
+	}
+	error_page 405 =200 \$uri;
 }
 EOL"
     sudo systemctl stop nginx
@@ -77,6 +79,11 @@ function installPhp {
     sudo systemctl enable php7.2-fpm
     sudo systemctl restart php7.2-fpm
     sudo systemctl status php7.2-fpm --no-pager
+	export phpIni='/etc/php/7.2/fpm/php.ini'
+	export tmp='/tmp/php_ini.tmp'
+    backupFileAsRoot "$phpIni"
+    sudo sed 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' $phpIni > $tmp
+    sudo mv $tmp $phpIni
 }
 
 sudo ls > /dev/null

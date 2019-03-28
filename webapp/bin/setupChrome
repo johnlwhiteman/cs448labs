@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+function backupFileAsRoot {
+    if [ ! -f "$1" ]; then
+        return
+    fi
+    if [ ! -f "$1.ORIGINAL" ]; then
+        sudo cp $1 $1.ORIGINAL
+    fi
+}
+
+function restoreFileAsRoot {
+    if [ -f $1.ORIGINAL ]; then
+        sudo cp $1.ORIGINAL $1
+    fi
+}
+
+function installChrome {
+	wget -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb 
+	sudo dpkg -i /tmp/google-chrome.deb
+	rm -f /tmp/google-chrome.deb
+}
+
+sudo ls > /dev/null
+installDeps
+installChrome
