@@ -3,7 +3,10 @@
 # sudo nano /etc/php/7.0/fpm/php.ini
 
 function backupFileAsRoot {
-    if [ ! -f $1.ORIGINAL ]; then
+    if [ ! -f "$1" ]; then
+        return
+    fi
+    if [ ! -f "$1.ORIGINAL" ]; then
         sudo cp $1 $1.ORIGINAL
     fi
 }
@@ -19,9 +22,10 @@ function installMySql {
 }
 
 function installNginx {
-    #sudo apt-get install nginx -y
+    sudo apt-get install nginx -y
+    sudo systemctl enable nginx
     backupFileAsRoot "/etc/nginx/sites-available/default"
-    bash -c "cat << 'EOL' > /tmp/default
+    bash -c "cat << 'EOL' > /tmp/cs448lab
 server {
         listen 80;
         root /var/www/html;
@@ -42,7 +46,21 @@ server {
         }
 }
 EOL"
-#    backupFileAsRoot "/etc/nginx/sites-enabled/default"
+    sudo systemctl stop nginx
+    backupFileAsRoot "/etc/nginx/sites-enabled/default"
+    backupFileAsRoot "/var/www/html/index.nginx-debian.html"
+    sudo mv /tmp/cs448lab /etc/nginx/sites-available/
+    return
+    #sudo chown root:root /etc/nginx/sites-available/cs448lab
+    sudo rm -f /etc/nginx/sites-available/default
+    sudo rm -f /etc/nginx/sites-available/default
+    sudo rm -f /etc/nginx/sites-enabled/cs448lab
+    sudo ln /etc/nginx/sites-available/cs448lab /etc/nginx/sites-enabled/cs448lab    
+    #sudo chown root:root /etc/nginx/sites-enabled/cs448lab
+    nginx -t
+    #sudo systemctl start nginx
+    #sudo systemctl status nginx --no-pager
+    #sudo setfacl -m u:$(whoami):rwx /var/www/html
 }
 
 function installPhp {
@@ -53,6 +71,6 @@ function installPhp {
 
 
 sudo ls > /dev/null
-#installNginx
+installNginx
 #installMySql
-installPhp
+#installPhp
