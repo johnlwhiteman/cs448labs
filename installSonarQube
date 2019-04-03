@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+P='https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.7.zip'
+wget -O ./sonarqube.zip $P
+unzip ./sonarqube.zip
+mv sonarqube-7.7/ ./sonarqube-server
