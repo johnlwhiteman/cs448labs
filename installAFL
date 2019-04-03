@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+###########################################################################
+# $ sudo -i
+# $ sudo echo core >/proc/sys/kernel/core_pattern
+# $ exit
+###########################################################################
+sudo ls >/dev/null
+
+# To show the AFL plots 
+sudo apt-get install gnuplot -y
+
+# Download and build AFL
+sudo sh -c 'echo core >/proc/sys/kernel/core_pattern'
+git clone https://github.com/mirrorer/afl.git
+cd afl
+make
+sudo make install
+
+# Download and build Fuzzgoat
+git clone https://github.com/fuzzstati0n/fuzzgoat.git
+cd ./fuzzgoat
+make
+
+# User needs to do this
+# echo 'Please run the following'
+# echo '$ sudo -i'
+# echo '$ sudo echo core >/proc/sys/kernel/core_pattern'
+# echo '$ exit'
+
+# Execution
+# afl-fuzz -i in -o out ./fuzzgoat @@
+# or simply:
+# make afl
+
+# Charting
+# cd ./fuzzgoat
+# afl-plot ./out ./charts
+
+# References
+# https://github.com/mirrorer/afl
+# https://github.com/fuzzstati0n/fuzzgoat
+

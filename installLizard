@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+sudo ls >/dev/null
+
+# Add key to verify signature
+wget -O - http://packages.lizardfs.com/lizardfs.key | apt-key add -
+
+sud
+
+
+
+# References
+# https://docs.lizardfs.com/adminguide/installation.html
