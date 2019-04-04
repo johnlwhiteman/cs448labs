@@ -3,6 +3,6 @@ sudo ls >/dev/null
 
 ./installPython
 sudo pip3 install lizard
-
+sudo apt-get install cloc -y
 # References
 # https://docs.lizardfs.com/adminguide/installation.html
