@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 sudo ls >>/dev/null
-cid=$(sudo docker container ls | grep sonarqube | awk '{print $1}')
+cid=$(sudo docker container ls -a | grep sonarqube | awk '{print $1}')
 if [ ! -z "$cid" ]; then
 	echo "Stopping SonarQube container $cid"
 	sudo docker stop $cid
+	sudo docker container rm $cid
 fi
