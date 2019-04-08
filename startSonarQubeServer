@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-$(pwd)/sonarqube-server/bin/linux-x86-64/sonar.sh restart
-firefox http://127.0.0.1:9000
