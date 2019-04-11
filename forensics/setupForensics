@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+function backupFileAsRoot {
+    if [ ! -f "$1" ]; then
+        return
+    fi
+    if [ ! -f "$1.ORIGINAL" ]; then
+        sudo cp $1 $1.ORIGINAL
+    fi
+}
+
+tmpy=/etc/scalpel/scalpel.conf
+backupFileAsRoot $tmpy
+sudo cp $(pwd)/scalpel.conf /etc/scalpel/
+unzip ./images.zip
