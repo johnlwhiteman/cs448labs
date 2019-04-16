@@ -27,8 +27,9 @@ echo oracle-java11-installer shared/accepted-oracle-license-v1-2 select true | s
 echo oracle-java11-installer shared/accepted-oracle-licence-v1-2 boolean true | sudo /usr/bin/debconf-set-selections
 sudo apt install oracle-java11-installer -y
 sudo apt install oracle-java11-set-default
-wget -O ${PDIR}/ghidra.zip https://ghidra-sre.org/ghidra_9.0.2_PUBLIC_20190403.zip
-unzip ${PDIR}/ghidra.zip -d ${PDIR}/
-mv ${PDIR}/ghidra_9.0.2 ${GDIR}
+#rm -f "${PDIR}/ghidra.zip"
+#wget -O "${PDIR}/ghidra.zip" 'https://ghidra-sre.org/ghidra_9.0.2_PUBLIC_20190403.zip'
+#unzip ${PDIR}/ghidra.zip -d ${PDIR}/
+#mv ${PDIR}/ghidra_9.0.2 ${GDIR}
 addBashPath "$DIR/"
 addBashPath "$GDIR/"
